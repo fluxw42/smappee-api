@@ -1,0 +1,24 @@
+language: java
+sudo: false
+install: true
+addons:
+  sonarqube:
+    organization: "fluxw42-github"
+    token:
+      secure: "JfI1blV+9NvErIEtBshgc0MEibUyIBqKAlC8AFFQp4qYB8SjXWFrG7Hsg7DgrpcEwtOnr4+Bgi62cdtoKpw7gm4ZDL/QpP/6F94uqOYe6
+               2Y8DI/IKAh5znJ4yzG3si2XQslBseJtgJ1a9prOIJUKIJLwdFPPd2nROg0cedMkCABAwG7lRdaFVPltjIxKvfiDN3LUQXNs/Fyq5IM7Ao
+               jW+adrEKJXppkvozJB/jTGLpjUWIOnV2/Z/TNqdykfso/BvcKSFo73458Jw2JYWCuD/cl75nj3WP+KLawhTYzvOv0Rv1A5Lcbcmj+uIPv
+               PFzh82gpVpcdchaq/coyROByAxXFBZ4mVyLTScoSL+dgIJh6fwmTuuviYEiZSgLarPzPDzzFfDwK1WDE54HthAF4nkWpVXVQal1x1dusJ
+               GcS5Wdf4hN7zia4N2D/usv1yp2xgzQxYKk4hr0rt7akN5/nVT83i7hoFMG38ZNFlQCIGiGjdAE7UQGHAQSuOkGn2on/84IP9Je6Km+vj5
+               g2+oVfPOMtbbWdANJzqTpOuqEgZnusE8kaJhxr/4QN/5TAsDo5jupeL6GVtfipyJEFihywIsgKFC4DyE3cyj45CyWSYeXGMIGtwUtWb6p
+               Z2akCi2yZPDDyT+2uOfMSdOtWuzN/rrzFWZRfgEoTJJZ7cTi5J9bk="
+jdk:
+  - oraclejdk8
+script:
+  - ./gradlew sonarqube
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle'
+    - '.gradle'
