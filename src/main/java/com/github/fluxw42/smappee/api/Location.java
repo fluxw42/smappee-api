@@ -1,7 +1,5 @@
 package com.github.fluxw42.smappee.api;
 
-import com.github.fluxw42.smappee.api.impl.LocationImpl;
-
 /**
  * Date: 6/17/17 - 7:39 AM
  *
