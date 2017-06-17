@@ -1,0 +1,6 @@
+{"appName": "MyFirstApp",
+  "serviceLocations": [
+    {"name": "Home", "serviceLocationId": 1},
+    {"name": "Beach resort", "serviceLocationId": 2 }
+  ]
+}

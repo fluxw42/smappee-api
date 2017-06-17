@@ -4,6 +4,7 @@ package com.github.fluxw42.smappee.api.impl;
 import com.github.fluxw42.smappee.api.AuthorizationCallback;
 import com.github.fluxw42.smappee.api.OAuthStorage;
 import com.github.fluxw42.smappee.api.ServiceLocation;
+import com.github.fluxw42.smappee.api.ServiceLocationInfo;
 import com.github.fluxw42.smappee.api.Smappee;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -51,7 +52,7 @@ public class SmappeeImpl implements Smappee {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void close() {
+	public final void close() {
 		this.client.close();
 	}
 
@@ -59,7 +60,7 @@ public class SmappeeImpl implements Smappee {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String getApplicationName() {
+	public final String getApplicationName() {
 		final GetServiceLocationsResponse serviceLocationResponse = this.client.target(BASE_URL)
 				.path("servicelocation")
 				.request(MediaType.APPLICATION_JSON)
@@ -73,7 +74,7 @@ public class SmappeeImpl implements Smappee {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<ServiceLocation> getServiceLocations() {
+	public final List<ServiceLocation> getServiceLocations() {
 		final GetServiceLocationsResponse serviceLocationResponse = this.client.target(BASE_URL)
 				.path("servicelocation")
 				.request(MediaType.APPLICATION_JSON)
@@ -81,6 +82,19 @@ public class SmappeeImpl implements Smappee {
 				.readEntity(GetServiceLocationsResponse.class);
 
 		return Collections.unmodifiableList(serviceLocationResponse.getServiceLocations());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final ServiceLocationInfo getServiceLocationInfo(final ServiceLocation serviceLocation) {
+		return this.client.target(BASE_URL)
+				.path("servicelocation/{id}/info")
+				.resolveTemplate("id", serviceLocation.getId())
+				.request(MediaType.APPLICATION_JSON)
+				.get()
+				.readEntity(ServiceLocationInfoImpl.class);
 	}
 
 }

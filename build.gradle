@@ -3,7 +3,20 @@ plugins {
     id "org.sonarqube" version "2.2"
 }
 
+group = 'com.github.fluxw42'
+version = '0.0.1-SNAPSHOT'
+
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -17,4 +30,5 @@ dependencies {
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }

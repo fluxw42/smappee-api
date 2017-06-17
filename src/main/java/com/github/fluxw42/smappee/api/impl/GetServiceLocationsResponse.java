@@ -1,6 +1,7 @@
 package com.github.fluxw42.smappee.api.impl;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.fluxw42.smappee.api.ServiceLocation;
 
@@ -13,6 +14,7 @@ import java.util.Optional;
  *
  * @author Jeroen Meulemeester
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GetServiceLocationsResponse {
 
 	/**

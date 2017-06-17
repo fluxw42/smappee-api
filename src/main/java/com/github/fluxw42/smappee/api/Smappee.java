@@ -23,5 +23,12 @@ public interface Smappee extends Closeable {
 	 * @return An unmodifiable list of all available service locations
 	 */
 	List<ServiceLocation> getServiceLocations();
-	
+
+	/**
+	 * Get all available information about one particular service location
+	 *
+	 * @return The service location info
+	 */
+	ServiceLocationInfo getServiceLocationInfo(final ServiceLocation serviceLocation);
+
 }

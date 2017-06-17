@@ -1,12 +1,14 @@
 package com.github.fluxw42.smappee.api.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.github.fluxw42.smappee.api.ServiceLocation;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Date: 6/16/17 - 11:46 PM
@@ -16,15 +18,19 @@ import static org.junit.Assert.assertTrue;
 public class GetServiceLocationsResponseTest {
 
 	@Test
-	public void testNullName() throws Exception {
-		assertEquals("", new GetServiceLocationsResponse(null, new ArrayList<>()).getAppName());
-	}
+	public void testFromJsonResponse() throws Exception {
+		final ObjectMapper objectMapper = new ObjectMapper();
+		final ObjectReader objectReader = objectMapper.readerFor(GetServiceLocationsResponse.class);
+		final GetServiceLocationsResponse response = objectReader.readValue(getClass().getResourceAsStream("ServiceLocations.json"));
 
-	@Test
-	public void testNullLocations() throws Exception {
-		final GetServiceLocationsResponse response = new GetServiceLocationsResponse("appName", null);
-		assertNotNull(response.getServiceLocations());
-		assertTrue(response.getServiceLocations().isEmpty());
+		assertNotNull(response);
+		assertEquals("MyFirstApp", response.getAppName());
+
+		final List<ServiceLocation> serviceLocations = response.getServiceLocations();
+		assertNotNull(serviceLocations);
+		assertEquals(2, serviceLocations.size());
+		assertEquals(new ServiceLocationImpl("Home", 1), serviceLocations.get(0));
+		assertEquals(new ServiceLocationImpl("Beach resort", 2), serviceLocations.get(1));
 	}
 
 }
