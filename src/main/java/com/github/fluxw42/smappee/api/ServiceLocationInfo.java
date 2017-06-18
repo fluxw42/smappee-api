@@ -67,4 +67,11 @@ public interface ServiceLocationInfo {
 	 */
 	List<Actuator> getActuators();
 
+	/**
+	 * Get the list of sensors in this service location
+	 *
+	 * @return The list of sensors
+	 */
+	List<Sensor> getSensors();
+
 }
