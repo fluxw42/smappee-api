@@ -1,5 +1,6 @@
 package com.github.fluxw42.smappee.api.impl;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,6 +20,11 @@ public class LocationImplTest {
 		final LocationImpl location = new LocationImpl(latitude, longitude);
 		assertEquals(latitude, location.getLatitude(), 0.0);
 		assertEquals(longitude, location.getLongitude(), 0.0);
+	}
+
+	@Test
+	public void equalsContract() {
+		EqualsVerifier.forClass(LocationImpl.class).verify();
 	}
 
 }
