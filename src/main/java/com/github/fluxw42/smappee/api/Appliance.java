@@ -17,7 +17,7 @@ public interface Appliance {
 	/**
 	 * Get the name of the appliance (eg. Coffeemaker, Refrigerator, ...)
 	 *
-	 * @return A human readable name for the service location
+	 * @return A human readable name for the appliance
 	 */
 	String getName();
 

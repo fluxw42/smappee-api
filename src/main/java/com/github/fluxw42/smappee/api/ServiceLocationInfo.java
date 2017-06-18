@@ -60,4 +60,11 @@ public interface ServiceLocationInfo {
 	 */
 	List<Appliance> getAppliances();
 
+	/**
+	 * Get the list of actuators in this service location
+	 *
+	 * @return The list of actuators
+	 */
+	List<Actuator> getActuators();
+
 }

@@ -2,6 +2,7 @@ package com.github.fluxw42.smappee.api.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.github.fluxw42.smappee.api.Actuator;
 import com.github.fluxw42.smappee.api.Appliance;
 import org.junit.Test;
 
@@ -40,6 +41,12 @@ public class ServiceLocationInfoImplTest {
 		assertEquals(2, appliances.size());
 		assertEquals(new ApplianceImpl(1, "Coffeemaker", "cooking"), appliances.get(0));
 		assertEquals(new ApplianceImpl(2, "Refrigerator", "refrigeration"), appliances.get(1));
+
+		final List<Actuator> actuators = info.getActuators();
+		assertNotNull(actuators);
+		assertEquals(2, actuators.size());
+		assertEquals(new ActuatorImpl(1, "TV plug"), actuators.get(0));
+		assertEquals(new ActuatorImpl(2, "Office plug"), actuators.get(1));
 
 	}
 }

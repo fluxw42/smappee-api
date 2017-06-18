@@ -3,6 +3,7 @@ package com.github.fluxw42.smappee.api.impl;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.fluxw42.smappee.api.Actuator;
 import com.github.fluxw42.smappee.api.Appliance;
 import com.github.fluxw42.smappee.api.Location;
 import com.github.fluxw42.smappee.api.ServiceLocationInfo;
@@ -28,6 +29,7 @@ public class ServiceLocationInfoImpl implements ServiceLocationInfo {
 	private final double electricityCost;
 	private final Currency electricityCurrency;
 	private final List<Appliance> appliances;
+	private final List<Actuator> actuators;
 
 	/**
 	 * Create a new info instance using the given values
@@ -40,6 +42,7 @@ public class ServiceLocationInfoImpl implements ServiceLocationInfo {
 	 * @param electricityCost     The electricity price
 	 * @param electricityCurrency The unit of the electricity price
 	 * @param appliances          The list of appliances available in this service location
+	 * @param actuators           The list of actuators available in this service location
 	 */
 	@JsonCreator
 	public ServiceLocationInfoImpl(
@@ -50,7 +53,8 @@ public class ServiceLocationInfoImpl implements ServiceLocationInfo {
 			@JsonProperty("lon") final double lon,
 			@JsonProperty("electricityCost") final double electricityCost,
 			@JsonProperty("electricityCurrency") final Currency electricityCurrency,
-			@JsonProperty("appliances") final List<ApplianceImpl> appliances) {
+			@JsonProperty("appliances") final List<ApplianceImpl> appliances,
+			@JsonProperty("actuators") final List<ActuatorImpl> actuators) {
 
 		this.id = id;
 		this.name = name;
@@ -60,6 +64,7 @@ public class ServiceLocationInfoImpl implements ServiceLocationInfo {
 		this.electricityCost = electricityCost;
 		this.electricityCurrency = electricityCurrency;
 		this.appliances = Collections.unmodifiableList(Optional.ofNullable(appliances).orElse(Collections.emptyList()));
+		this.actuators = Collections.unmodifiableList(Optional.ofNullable(actuators).orElse(Collections.emptyList()));
 	}
 
 	/**
@@ -110,9 +115,20 @@ public class ServiceLocationInfoImpl implements ServiceLocationInfo {
 		return this.electricityCurrency;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public final List<Appliance> getAppliances() {
-		return appliances;
+		return this.appliances;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<Actuator> getActuators() {
+		return this.actuators;
 	}
 
 	@Override
@@ -125,6 +141,7 @@ public class ServiceLocationInfoImpl implements ServiceLocationInfo {
 		sb.append(", electricityCost=").append(electricityCost);
 		sb.append(", electricityCurrency=").append(electricityCurrency.getCurrencyCode());
 		sb.append(", appliances=").append(appliances);
+		sb.append(", actuators=").append(actuators);
 		sb.append('}');
 		return sb.toString();
 	}
