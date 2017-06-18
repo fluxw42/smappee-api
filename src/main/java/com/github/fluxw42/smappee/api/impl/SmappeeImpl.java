@@ -14,6 +14,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Date: 6/13/17 - 9:36 PM
@@ -33,12 +34,28 @@ public class SmappeeImpl implements Smappee {
 	private final Client client;
 
 	/**
-	 * Create a new {@link Smappee} instance
+	 * The smappee API base URL
+	 */
+	private final String baseUrl;
+
+	/**
+	 * Create a new {@link Smappee} instance, using the default base URL
 	 *
 	 * @param authCallback The authorization callback, used to request the credentials of the user when needed
 	 * @param oAuthStorage The OAuth storage used to store the API tokens so we don't need to ask the user for authorization again
 	 */
 	public SmappeeImpl(final AuthorizationCallback authCallback, final OAuthStorage oAuthStorage) {
+		this(authCallback, oAuthStorage, BASE_URL);
+	}
+
+	/**
+	 * Create a new {@link Smappee} instance, using a specific base URL
+	 *
+	 * @param authCallback The authorization callback, used to request the credentials of the user when needed
+	 * @param oAuthStorage The OAuth storage used to store the API tokens so we don't need to ask the user for authorization again
+	 * @param baseUrl      The base url
+	 */
+	public SmappeeImpl(final AuthorizationCallback authCallback, final OAuthStorage oAuthStorage, final String baseUrl) {
 		final OAuth2Filter oAuth2Filter = new OAuth2Filter(BASE_URL, authCallback, oAuthStorage);
 
 		final ClientConfig clientConfig = new ClientConfig();
@@ -46,7 +63,10 @@ public class SmappeeImpl implements Smappee {
 
 		this.client = ClientBuilder.newClient(clientConfig);
 		this.client.register(oAuth2Filter);
+
+		this.baseUrl = Objects.requireNonNull(baseUrl);
 	}
+
 
 	/**
 	 * {@inheritDoc}
@@ -61,7 +81,7 @@ public class SmappeeImpl implements Smappee {
 	 */
 	@Override
 	public final String getApplicationName() {
-		final GetServiceLocationsResponse serviceLocationResponse = this.client.target(BASE_URL)
+		final GetServiceLocationsResponse serviceLocationResponse = this.client.target(this.baseUrl)
 				.path("servicelocation")
 				.request(MediaType.APPLICATION_JSON)
 				.get()
@@ -75,7 +95,7 @@ public class SmappeeImpl implements Smappee {
 	 */
 	@Override
 	public final List<ServiceLocation> getServiceLocations() {
-		final GetServiceLocationsResponse serviceLocationResponse = this.client.target(BASE_URL)
+		final GetServiceLocationsResponse serviceLocationResponse = this.client.target(this.baseUrl)
 				.path("servicelocation")
 				.request(MediaType.APPLICATION_JSON)
 				.get()
@@ -89,7 +109,7 @@ public class SmappeeImpl implements Smappee {
 	 */
 	@Override
 	public final ServiceLocationInfo getServiceLocationInfo(final ServiceLocation serviceLocation) {
-		return this.client.target(BASE_URL)
+		return this.client.target(this.baseUrl)
 				.path("servicelocation/{id}/info")
 				.resolveTemplate("id", serviceLocation.getId())
 				.request(MediaType.APPLICATION_JSON)
