@@ -1,6 +1,7 @@
 package com.github.fluxw42.smappee.api;
 
 import java.io.Closeable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,5 +31,16 @@ public interface Smappee extends Closeable {
 	 * @return The service location info
 	 */
 	ServiceLocationInfo getServiceLocationInfo(final ServiceLocation serviceLocation);
+
+	/**
+	 * Get the consumption of the given service location
+	 *
+	 * @param serviceLocation   The an accessible service location
+	 * @param from              The UTC stamp in indicating the beginning of the queried period
+	 * @param to                The UTC stamp indicating the end of the queried period
+	 * @param aggregationPeriod The aggregation period (5 min values are only available for the last 14 days)
+	 * @return The consumption intervals
+	 */
+	List<Consumption> getConsumption(final ServiceLocation serviceLocation, final Date from, final Date to, final AggregationPeriod aggregationPeriod);
 
 }

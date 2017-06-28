@@ -1,0 +1,23 @@
+{
+  "serviceLocationId": 123,
+  "consumptions": [
+    {
+      "timestamp": 1372672500000,
+      "consumption": 23,
+      "solar": 56,
+      "alwaysOn": 12
+    },
+    {
+      "timestamp": 1372672800000,
+      "consumption": 67,
+      "solar": 57,
+      "alwaysOn": 12
+    },
+    {
+      "timestamp": 1372673100000,
+      "consumption": 88,
+      "solar": 58,
+      "alwaysOn": 12
+    }
+  ]
+}

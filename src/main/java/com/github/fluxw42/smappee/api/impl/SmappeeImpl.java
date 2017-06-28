@@ -1,7 +1,9 @@
 package com.github.fluxw42.smappee.api.impl;
 
 
+import com.github.fluxw42.smappee.api.AggregationPeriod;
 import com.github.fluxw42.smappee.api.AuthorizationCallback;
+import com.github.fluxw42.smappee.api.Consumption;
 import com.github.fluxw42.smappee.api.OAuthStorage;
 import com.github.fluxw42.smappee.api.ServiceLocation;
 import com.github.fluxw42.smappee.api.ServiceLocationInfo;
@@ -13,6 +15,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -117,4 +120,17 @@ public class SmappeeImpl implements Smappee {
 				.readEntity(ServiceLocationInfoImpl.class);
 	}
 
+	@Override
+	public List<Consumption> getConsumption(final ServiceLocation serviceLocation, final Date from, final Date to, final AggregationPeriod aggregationPeriod) {
+		return this.client.target(this.baseUrl)
+				.path("servicelocation/{id}/consumption")
+				.resolveTemplate("id", serviceLocation.getId())
+				.queryParam("aggregation", aggregationPeriod.getId())
+				.queryParam("from", from.getTime())
+				.queryParam("to", to.getTime())
+				.request(MediaType.APPLICATION_JSON)
+				.get()
+				.readEntity(GetConsumptionsResponse.class)
+				.getConsumptions();
+	}
 }
