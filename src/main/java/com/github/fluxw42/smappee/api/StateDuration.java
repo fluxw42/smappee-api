@@ -16,17 +16,17 @@ public enum StateDuration {
 	HOUR(3600);
 
 	/**
-	 * The duration
+	 * The duration in seconds
 	 */
-	private final Duration duration;
+	private final long duration;
 
 	/**
 	 * Create a new state duration
 	 *
 	 * @param duration The duration in seconds, or a negative value if not applicable
 	 */
-	StateDuration(final int duration) {
-		this.duration = Duration.ofSeconds(duration);
+	StateDuration(final long duration) {
+		this.duration = duration;
 	}
 
 	/**
@@ -35,7 +35,7 @@ public enum StateDuration {
 	 * @return The duration
 	 */
 	public final Duration getDuration() {
-		return this.duration;
+		return Duration.ofSeconds(this.duration);
 	}
 
 }
