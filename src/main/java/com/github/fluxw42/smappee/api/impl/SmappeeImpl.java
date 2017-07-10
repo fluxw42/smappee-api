@@ -1,22 +1,32 @@
 package com.github.fluxw42.smappee.api.impl;
 
 
+import com.github.fluxw42.smappee.api.Actuator;
 import com.github.fluxw42.smappee.api.AggregationPeriod;
+import com.github.fluxw42.smappee.api.Appliance;
 import com.github.fluxw42.smappee.api.AuthorizationCallback;
 import com.github.fluxw42.smappee.api.Consumption;
+import com.github.fluxw42.smappee.api.Event;
 import com.github.fluxw42.smappee.api.OAuthStorage;
 import com.github.fluxw42.smappee.api.ServiceLocation;
 import com.github.fluxw42.smappee.api.ServiceLocationInfo;
 import com.github.fluxw42.smappee.api.Smappee;
+import com.github.fluxw42.smappee.api.StateDuration;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -120,8 +130,11 @@ public class SmappeeImpl implements Smappee {
 				.readEntity(ServiceLocationInfoImpl.class);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public List<Consumption> getConsumption(final ServiceLocation serviceLocation, final Date from, final Date to, final AggregationPeriod aggregationPeriod) {
+	public final List<Consumption> getConsumption(final ServiceLocation serviceLocation, final Date from, final Date to, final AggregationPeriod aggregationPeriod) {
 		return this.client.target(this.baseUrl)
 				.path("servicelocation/{id}/consumption")
 				.resolveTemplate("id", serviceLocation.getId())
@@ -132,5 +145,56 @@ public class SmappeeImpl implements Smappee {
 				.get()
 				.readEntity(GetConsumptionsResponse.class)
 				.getConsumptions();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final List<Event> getEvents(final ServiceLocation serviceLocation, final Date from, final Date to, final int maxEntries, final Appliance... appliances) {
+
+		if (appliances == null || appliances.length == 0) {
+			return Collections.emptyList();
+		}
+
+		final Object[] applianceIds = Arrays.stream(appliances)
+				.filter(Objects::nonNull)
+				.map(Appliance::getId)
+				.distinct()
+				.toArray();
+
+		final List<EventImpl> events = this.client.target(this.baseUrl)
+				.path("servicelocation/{id}/events")
+				.resolveTemplate("id", serviceLocation.getId())
+				.queryParam("applianceId", applianceIds)
+				.queryParam("maxNumber", maxEntries)
+				.queryParam("from", Objects.requireNonNull(from).getTime())
+				.queryParam("to", Objects.requireNonNull(to).getTime())
+				.request(MediaType.APPLICATION_JSON)
+				.get()
+				.readEntity(new GenericType<List<EventImpl>>() {});
+
+		return Collections.unmodifiableList(events);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final boolean setActuatorState(final ServiceLocation serviceLocation, final Actuator actuator, final boolean state, final StateDuration duration) {
+		final Map<Object, Object> data = new HashMap<>();
+		data.put("duration", duration.getDuration().getSeconds());
+
+		final Response.Status.Family family = this.client.target(this.baseUrl)
+				.path("/servicelocation/{serviceLocationId}/actuator/{actuatorId}/{state}")
+				.resolveTemplate("serviceLocationId", serviceLocation.getId())
+				.resolveTemplate("actuatorId", actuator.getId())
+				.resolveTemplate("state", state ? "on" : "off")
+				.request(MediaType.APPLICATION_JSON)
+				.post(Entity.json(data))
+				.getStatusInfo()
+				.getFamily();
+
+		return family == Response.Status.Family.SUCCESSFUL;
 	}
 }

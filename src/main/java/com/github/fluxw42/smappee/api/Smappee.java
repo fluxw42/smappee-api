@@ -43,4 +43,27 @@ public interface Smappee extends Closeable {
 	 */
 	List<Consumption> getConsumption(final ServiceLocation serviceLocation, final Date from, final Date to, final AggregationPeriod aggregationPeriod);
 
+	/**
+	 * Get the events of one or more appliances
+	 *
+	 * @param serviceLocation the service location the appliances belong to
+	 * @param from            The UTC stamp in indicating the beginning of the queried period
+	 * @param to              The UTC stamp indicating the end of the queried period
+	 * @param maxEntries      The maximum number of events that should be returned by this query
+	 * @param appliances      The set of appliances to get events for
+	 * @return The list of appliance events
+	 */
+	List<Event> getEvents(final ServiceLocation serviceLocation, final Date from, final Date to, final int maxEntries, final Appliance... appliances);
+
+	/**
+	 * Set the state of the actuator to the given value
+	 *
+	 * @param serviceLocation The service location the actuator belongs to
+	 * @param actuator        The actual actuator that should get the new state
+	 * @param state           The new state where <tt>true</tt> is enabled, <tt>false</tt> disabled
+	 * @param duration        The duration of the new state
+	 * @return <tt>true</tt> when successful, <tt>false</tt> if not
+	 */
+	boolean setActuatorState(final ServiceLocation serviceLocation, final Actuator actuator, final boolean state, final StateDuration duration);
+	
 }

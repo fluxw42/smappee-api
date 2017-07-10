@@ -1,0 +1,30 @@
+{
+  "serviceLocationId": 1,
+  "sensorId": 4,
+  "records": [
+    {
+      "timestamp": 1457597400000,
+      "value1": 11.0,
+      "value2": 2.0,
+      "temperature": 226.0,
+      "humidity": 41.0,
+      "battery": 100.0
+    },
+    {
+      "timestamp": 1457597700000,
+      "value1": 9.0,
+      "value2": 3.0,
+      "temperature": 220.0,
+      "humidity": 39.0,
+      "battery": 100.0
+    },
+    {
+      "timestamp": 1457598000000,
+      "value1": 10.0,
+      "value2": 1.0,
+      "temperature": 202.0,
+      "humidity": 39.0,
+      "battery": 100.0
+    }
+  ]
+}
