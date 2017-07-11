@@ -8,6 +8,8 @@ import com.github.fluxw42.smappee.api.AuthorizationCallback;
 import com.github.fluxw42.smappee.api.Consumption;
 import com.github.fluxw42.smappee.api.Event;
 import com.github.fluxw42.smappee.api.OAuthStorage;
+import com.github.fluxw42.smappee.api.Sensor;
+import com.github.fluxw42.smappee.api.SensorRecord;
 import com.github.fluxw42.smappee.api.ServiceLocation;
 import com.github.fluxw42.smappee.api.ServiceLocationInfo;
 import com.github.fluxw42.smappee.api.Smappee;
@@ -196,5 +198,23 @@ public class SmappeeImpl implements Smappee {
 				.getFamily();
 
 		return family == Response.Status.Family.SUCCESSFUL;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final List<SensorRecord> getSensorConsumption(final ServiceLocation serviceLocation, final Sensor sensor, final Date from, final Date to, final AggregationPeriod aggregationPeriod) {
+		return this.client.target(this.baseUrl)
+				.path("servicelocation/{serviceLocationId}/sensor/{sensorId}/consumption")
+				.resolveTemplate("serviceLocationId", serviceLocation.getId())
+				.resolveTemplate("sensorId", sensor.getId())
+				.queryParam("from", Objects.requireNonNull(from).getTime())
+				.queryParam("to", Objects.requireNonNull(to).getTime())
+				.queryParam("aggregation", aggregationPeriod.getId())
+				.request(MediaType.APPLICATION_JSON)
+				.get()
+				.readEntity(GetSensorRecordsResponse.class)
+				.getSensorRecords();
 	}
 }

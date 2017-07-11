@@ -7,6 +7,8 @@ import com.github.fluxw42.smappee.api.AuthorizationCallback;
 import com.github.fluxw42.smappee.api.Consumption;
 import com.github.fluxw42.smappee.api.Event;
 import com.github.fluxw42.smappee.api.OAuthStorage;
+import com.github.fluxw42.smappee.api.Sensor;
+import com.github.fluxw42.smappee.api.SensorRecord;
 import com.github.fluxw42.smappee.api.ServiceLocation;
 import com.github.fluxw42.smappee.api.StateDuration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -226,4 +228,47 @@ public class SmappeeImplTest extends TestWithResource {
 			verifyNoMoreInteractions(oAuthStorage);
 		}
 	}
+
+	@Test
+	public void testSensorConsumption() throws Exception {
+		stubFor(get(urlEqualTo("/servicelocation/1/sensor/4/consumption?from=1388534400000&to=1391212800000&aggregation=3"))
+				.withHeader("Authorization", equalTo("Bearer access-token-value"))
+				.willReturn(aResponse()
+						.withStatus(200)
+						.withHeader("Content-Type", "application/json")
+						.withBody(getResource("GetSensorConsumption.json"))));
+
+		final AuthorizationCallback authorizationCallback = mock(AuthorizationCallback.class);
+		final OAuthStorage oAuthStorage = mock(OAuthStorage.class);
+		when(oAuthStorage.getAccessToken()).thenReturn("access-token-value");
+
+		final String baseUrl = "http://localhost:" + this.wireMockRule.port();
+
+		try (final SmappeeImpl api = new SmappeeImpl(authorizationCallback, oAuthStorage, baseUrl)) {
+			final ServiceLocation serviceLocation = mock(ServiceLocation.class);
+			when(serviceLocation.getId()).thenReturn(1L);
+
+			final Sensor sensor = mock(Sensor.class);
+			when(sensor.getId()).thenReturn(4L);
+
+			final List<SensorRecord> records = api.getSensorConsumption(
+					serviceLocation,
+					sensor,
+					new Date(1388534400000L),
+					new Date(1391212800000L),
+					AggregationPeriod.DAILY
+			);
+
+			assertNotNull(records);
+			assertEquals(3, records.size());
+			assertEquals(new SensorRecordImpl(new Date(1457597400000L), 11.0, 2.0, 226.0, 41.0, 100.0), records.get(0));
+			assertEquals(new SensorRecordImpl(new Date(1457597700000L), 9.0, 3.0, 220.0, 39.0, 100.0), records.get(1));
+			assertEquals(new SensorRecordImpl(new Date(1457598000000L), 10.0, 1.0, 202.0, 39.0, 100.0), records.get(2));
+
+			verifyZeroInteractions(authorizationCallback);
+			verify(oAuthStorage, atLeastOnce()).getAccessToken();
+			verifyNoMoreInteractions(oAuthStorage);
+		} 
+	}
+
 }

@@ -35,7 +35,7 @@ public interface Smappee extends Closeable {
 	/**
 	 * Get the consumption of the given service location
 	 *
-	 * @param serviceLocation   The an accessible service location
+	 * @param serviceLocation   The service location
 	 * @param from              The UTC stamp in indicating the beginning of the queried period
 	 * @param to                The UTC stamp indicating the end of the queried period
 	 * @param aggregationPeriod The aggregation period (5 min values are only available for the last 14 days)
@@ -65,5 +65,17 @@ public interface Smappee extends Closeable {
 	 * @return <tt>true</tt> when successful, <tt>false</tt> if not
 	 */
 	boolean setActuatorState(final ServiceLocation serviceLocation, final Actuator actuator, final boolean state, final StateDuration duration);
-	
+
+	/**
+	 * Get the consumption of the given sensor
+	 *
+	 * @param serviceLocation   The service location which the sensor belongs to
+	 * @param sensor            The sensor
+	 * @param from              The UTC stamp in indicating the beginning of the queried period
+	 * @param to                The UTC stamp indicating the end of the queried period
+	 * @param aggregationPeriod The aggregation period (5 min values are only available for the last 14 days)
+	 * @return The sensor record intervals
+	 */
+	List<SensorRecord> getSensorConsumption(final ServiceLocation serviceLocation, final Sensor sensor, final Date from, final Date to, final AggregationPeriod aggregationPeriod);
+
 }

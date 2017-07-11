@@ -7,6 +7,7 @@ import com.github.fluxw42.smappee.api.Consumption;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -57,4 +58,39 @@ public class GetConsumptionsResponse {
 		return this.consumptions;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final boolean equals(final Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof GetConsumptionsResponse)) {
+			return false;
+		}
+		final GetConsumptionsResponse that = (GetConsumptionsResponse) o;
+		return getServiceLocationId() == that.getServiceLocationId() &&
+				Objects.equals(getConsumptions(), that.getConsumptions());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final int hashCode() {
+		return Objects.hash(getServiceLocationId(), getConsumptions());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public final String toString() {
+		final StringBuilder sb = new StringBuilder("GetConsumptionsResponse{");
+		sb.append("serviceLocationId=").append(serviceLocationId);
+		sb.append(", consumptions=").append(consumptions);
+		sb.append('}');
+		return sb.toString();
+	}
 }
